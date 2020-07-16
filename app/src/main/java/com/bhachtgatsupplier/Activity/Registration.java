@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -144,6 +145,13 @@ public class Registration extends AppCompatActivity {
 
     private void registration(String profilePhoto, String firstName, String lastName, String mobileNumber, String address, String aadharCard, String panCard, String planterArea, String dryArea, String emailId, String password, String bankName, String accountNumber, String branchNme, String iFSC) {
 
+        ProgressDialog progressDialog = new ProgressDialog(Registration.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setTitle("Account is creating");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+
         ApiInterface apiInterface = Api.getClient().create(ApiInterface.class);
         Call<LoginResponse> call = apiInterface.Registration(profilePhoto, firstName, lastName, mobileNumber, address, aadharCard, panCard, planterArea, dryArea, emailId, password, bankName, accountNumber, branchNme, iFSC);
         call.enqueue(new Callback<LoginResponse>() {
@@ -151,8 +159,12 @@ public class Registration extends AppCompatActivity {
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
 
                 if (response.body().getStatus().equals("true")){
+                    progressDialog.dismiss();
                     Toast.makeText(Registration.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Registration.this, Login.class);
+                    startActivity(intent);
                 } else if (response.body().getStatus().equals("false")){
+                    progressDialog.dismiss();
                     Toast.makeText(Registration.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -160,6 +172,7 @@ public class Registration extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                progressDialog.dismiss();
                 Log.e("Error", ""+t.getMessage());
             }
         });

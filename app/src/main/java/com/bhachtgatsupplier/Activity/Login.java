@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
@@ -45,6 +46,7 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.BindViews;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
@@ -61,7 +63,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     @BindViews({R.id.sendotpLayout, R.id.verifyotpLayout})
     List<LinearLayout> linearLayouts;
     @BindView(R.id.forgotLayout)
-    LinearLayout forgotLayout;
+    RelativeLayout forgotLayout;
     GoogleApiClient mGoogleApiClient;
     SmsBroadcastReceiver mSmsBroadcastReceiver;
     CountDownTimer cTimer = null;
@@ -72,6 +74,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         // init broadcast receiver
         mSmsBroadcastReceiver = new SmsBroadcastReceiver();
@@ -183,7 +186,9 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         HASH_KEY = HASH_KEY.replace("+", "%252B");
         OTP= new DecimalFormat("0000").format(new Random().nextInt(9999));
         String message = "<#> Your Bachatgat verification OTP code is "+ OTP +". Code valid for 10 minutes only, one time use. Please DO NOT share this OTP with anyone.\n" + HASH_KEY;
-
+        String encoded_message= URLEncoder.encode(message);
+		
+		
         ProgressDialog progressDialog = new ProgressDialog(Login.this);
         progressDialog.setMessage("Loading...");
         progressDialog.setTitle("OTP is sending");
@@ -192,7 +197,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         progressDialog.setCancelable(false);
 
         ApiInterface apiInterface = Api.getClient().create(ApiInterface.class);
-        Call<JSONObject> call = apiInterface.sendSMS(mobileNumber, message);
+        Call<JSONObject> call = apiInterface.sendSMS(mobileNumber, encoded_message);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
