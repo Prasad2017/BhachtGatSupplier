@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -34,12 +35,16 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mukesh.OnOtpCompletionListener;
 import com.mukesh.OtpView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +53,7 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 import es.dmoral.toasty.Toasty;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -69,6 +75,10 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
     CountDownTimer cTimer = null;
     String otpCode, OTP, customerId;
     private String HASH_KEY;
+    AsyncHttpClient asyncHttpClient = new AsyncHttpClient();
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +176,19 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
 
                 if(response.body().getStatus().equals("true")){
                     Toast.makeText(Login.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                    pref = getSharedPreferences("user", Context.MODE_PRIVATE);
+                    editor = pref.edit();
+                    editor.putString("UserLogin", "UserLoginSuccessful");
+                    editor.commit();
+
+                 //   Common.saveUserData(Login.this, "userId", response.body().getCustomerId());
+                   // Common.saveUserData(Login.this, "cartId", response.body().getCardId());
+
+                    Intent forgotIntent = new Intent(Login.this, MainPage.class);
+                    startActivity(forgotIntent);
+                    finishAffinity();
+
                 } else  if(response.body().getStatus().equals("false")){
                     Toast.makeText(Login.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -185,7 +208,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         HASH_KEY = (String) new AppSignatureHelper(this).getAppSignatures().get(0);
         HASH_KEY = HASH_KEY.replace("+", "%252B");
         OTP= new DecimalFormat("0000").format(new Random().nextInt(9999));
-        String message = "<#> Your Bachatgat verification OTP code is "+ OTP +". Code valid for 10 minutes only, one time use. Please DO NOT share this OTP with anyone.\n" + HASH_KEY;
+        String message = "<#> Your GraminVikreta verification OTP code is "+ OTP +". Please DO NOT share this OTP with anyone.\n" + HASH_KEY;
         String encoded_message= URLEncoder.encode(message);
 		
 		
@@ -196,23 +219,26 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
         progressDialog.show();
         progressDialog.setCancelable(false);
 
-        ApiInterface apiInterface = Api.getClient().create(ApiInterface.class);
-        Call<JSONObject> call = apiInterface.sendSMS(mobileNumber, encoded_message);
-        call.enqueue(new Callback<JSONObject>() {
+        RequestParams requestParams = new RequestParams();
+        requestParams.put("number", mobileNumber);
+        requestParams.put("message", encoded_message);
+
+        asyncHttpClient.get("http://graminvikreta.com/androidApp/Supplier/sendSMS.php", requestParams, new AsyncHttpResponseHandler() {
             @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                String s = new String(responseBody);
 
                 try {
-                    if (response.body().getString("success").equals("1"))
-                    {
+                    JSONObject jsonObject= new JSONObject(s);
+                    if (jsonObject.getString("success").equals("1")){
                         progressDialog.dismiss();
 
                         linearLayouts.get(0).setVisibility(View.GONE);
                         linearLayouts.get(1).setVisibility(View.VISIBLE);
                         Toast.makeText(Login.this, "OTP sent successfully", Toast.LENGTH_SHORT).show();
                         startSMSListener();
-
-                    } else  {
+                    } else {
                         progressDialog.dismiss();
 
                         linearLayouts.get(1).setVisibility(View.GONE);
@@ -226,12 +252,11 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
             }
 
             @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 progressDialog.dismiss();
 
                 linearLayouts.get(1).setVisibility(View.GONE);
                 linearLayouts.get(0).setVisibility(View.VISIBLE);
-                Log.e("Error", ""+t.getMessage());
             }
         });
 
@@ -271,7 +296,7 @@ public class Login extends AppCompatActivity implements GoogleApiClient.Connecti
 
     @Override
     public void onOtpReceived(String otp) {
-        Toast.makeText(this, "Otp Received " + otp, Toast.LENGTH_LONG).show();
+   //     Toast.makeText(this, "Otp Received " + otp, Toast.LENGTH_LONG).show();
         otpView.setText(otp);
     }
 

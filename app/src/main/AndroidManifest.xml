@@ -38,7 +38,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="android:icon">
 
-        <activity android:name=".Activity.MainActivity"
+        <activity android:name=".Activity.MainPage"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="InnerclassSeparator"/>
