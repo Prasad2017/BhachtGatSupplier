@@ -45,7 +45,7 @@ public class ComplaintList extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addComplaint:
-                ((MainPage) getActivity()).loadFragment(new AddProduct(), true);
+                ((MainPage) getActivity()).loadFragment(new AddComplaint(), true);
                 break;
         }
     }
