@@ -47,8 +47,10 @@ public class Orders extends Fragment {
         viewPager = view.findViewById(R.id.view_pager);
         tabLayout = view.findViewById(R.id.tab_layout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("UpcomingOrder"));
-        tabLayout.addTab(tabLayout.newTab().setText("History"));
+        tabLayout.addTab(tabLayout.newTab().setText("Today's Customer Order"));
+        tabLayout.addTab(tabLayout.newTab().setText("Today's Pickup Order"));
+        tabLayout.addTab(tabLayout.newTab().setText("Delivered Order"));
+        tabLayout.addTab(tabLayout.newTab().setText("Benefit Order"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.white), ContextCompat.getColor(getActivity(), R.color.white));
 
@@ -56,7 +58,7 @@ public class Orders extends Fragment {
         tabs[0] = new TodayCustomerOrder();
         tabs[1] = new TodayPickupOrder();
         tabs[2] = new DeliveredOrder();
-        tabs[3] = new BenifitOrder();
+        tabs[3] = new BenefitOrder();
         adapter = new TabViewAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount(), tabs, 1);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
