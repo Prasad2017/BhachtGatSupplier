@@ -3,7 +3,6 @@ package com.bhachtgatsupplier.Fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,8 +16,8 @@ import com.bhachtgatsupplier.R;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
+public class UpdateProduct extends Fragment {
 
-public class AddProduct extends Fragment {
 
     View view;
 
@@ -26,7 +25,7 @@ public class AddProduct extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_add_product, container, false);
+        view = inflater.inflate(R.layout.fragment_update_product, container, false);
         ButterKnife.bind(this, view);
         MainPage.title.setText("");
 

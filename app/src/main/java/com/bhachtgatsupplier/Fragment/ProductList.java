@@ -46,7 +46,7 @@ public class ProductList extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addProduct:
-                ((MainPage) getActivity()).loadFragment(new AddProduct(), false);
+                ((MainPage) getActivity()).loadFragment(new AddProduct(), true);
                 break;
         }
     }
@@ -57,7 +57,6 @@ public class ProductList extends Fragment {
         MainPage.title.setVisibility(View.VISIBLE);
         ((MainPage) getActivity()).lockUnlockDrawer(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         if (DetectConnection.checkInternetConnection(getActivity())) {
-
 
         } else {
             Toasty.warning(getActivity(), "No Internet Connection", Toasty.LENGTH_SHORT, true).show();
