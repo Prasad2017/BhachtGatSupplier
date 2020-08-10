@@ -222,8 +222,7 @@ public class Registration extends AppCompatActivity {
                 if (!companyTxt.getText().toString().trim().equals("")) {
 
                     if (formEditTexts.get(0).testValidity() && formEditTexts.get(1).testValidity() && formEditTexts.get(2).testValidity() && formEditTexts.get(3).testValidity() && formEditTexts.get(4).testValidity()
-                            && formEditTexts.get(5).testValidity() && formEditTexts.get(8).testValidity() && formEditTexts.get(9).testValidity() && formEditTexts.get(14).testValidity()
-                            && formEditTexts.get(11).testValidity() && formEditTexts.get(12).testValidity() && formEditTexts.get(13).testValidity()) {
+                            && formEditTexts.get(5).testValidity() && formEditTexts.get(8).testValidity() && formEditTexts.get(9).testValidity() && formEditTexts.get(14).testValidity()) {
 
                         if (formEditTexts.get(2).getText().toString().trim().length() == 10) {
 
@@ -233,8 +232,6 @@ public class Registration extends AppCompatActivity {
 
                                     matcher = pattern.matcher(formEditTexts.get(5).getText().toString());
                                     if (matcher.matches()) {
-
-                                        if (formEditTexts.get(13).getText().toString().trim().length() == 11) {
 
                                             if (formEditTexts.get(14).getText().toString().equals(formEditTexts.get(9).getText().toString())) {
 
@@ -255,10 +252,6 @@ public class Registration extends AppCompatActivity {
                                                 formEditTexts.get(14).setError("Enter valid confirm password");
                                                 formEditTexts.get(14).requestFocus();
                                             }
-                                        } else {
-                                            formEditTexts.get(13).setError("Enter valid IFSC code");
-                                            formEditTexts.get(13).requestFocus();
-                                        }
 
                                     } else {
                                         formEditTexts.get(5).setError("Enter valid pan number");
