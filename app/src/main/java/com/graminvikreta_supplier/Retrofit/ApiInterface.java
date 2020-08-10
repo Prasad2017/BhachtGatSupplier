@@ -21,6 +21,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/androidApp/Supplier/Registration.php")
     Call<LoginResponse> Registration(@Field("profilePhoto") String profilePhoto,
+                                     @Field("companyType") String companyType,
+                                     @Field("companyName") String companyName,
                                      @Field("firstName") String firstName,
                                      @Field("lastName") String lastName,
                                      @Field("mobileNumber")  String mobileNumber,

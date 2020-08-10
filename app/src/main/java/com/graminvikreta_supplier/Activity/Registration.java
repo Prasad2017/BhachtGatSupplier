@@ -4,37 +4,51 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aminography.choosephotohelper.ChoosePhotoHelper;
 import com.aminography.choosephotohelper.callback.ChoosePhotoCallback;
 import com.andreabaccega.widget.FormEditText;
+import com.graminvikreta_supplier.Adapter.AssignToAdapter;
+import com.graminvikreta_supplier.Extra.RecyclerTouchListener;
+import com.graminvikreta_supplier.Model.AssignResponse;
 import com.graminvikreta_supplier.Model.LoginResponse;
 import com.graminvikreta_supplier.R;
 import com.graminvikreta_supplier.Retrofit.Api;
 import com.graminvikreta_supplier.Retrofit.ApiInterface;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.itextpdf.layout.element.Text;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -44,6 +58,8 @@ import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,16 +76,21 @@ import retrofit2.Response;
 public class Registration extends AppCompatActivity {
 
     @BindViews({R.id.firstName, R.id.lastName, R.id.mobileNumber, R.id.address, R.id.aadharCard, R.id.panCard, R.id.planterArea, R.id.dryArea, R.id.emailID, R.id.password, R.id.bankName,
-    R.id.accountNumber, R.id.branchName, R.id.iFSC})
+            R.id.accountNumber, R.id.branchName, R.id.iFSC, R.id.confirmPassword, R.id.companyName})
     List<FormEditText> formEditTexts;
     @BindView(R.id.imageView)
     ImageView imageView;
+    @BindView(R.id.companyTxt)
+    TextView companyTxt;
     @BindView(R.id.loginLinearLayout)
     LinearLayout loginLinearLayout;
     private ChoosePhotoHelper choosePhotoHelper;
     Bitmap bitmap;
     Pattern pattern = Pattern.compile("[A-Z]{5}[0-9]{4}[A-Z]{1}");
     Matcher matcher;
+    boolean isEmailValid, isPasswordValid, isPasswordVisible;
+    private List<String> rootFilters;
+    private List<AssignResponse> assignResponseList = new ArrayList<>();
 
 
 
@@ -92,13 +113,29 @@ public class Registration extends AppCompatActivity {
         formEditTexts.get(3).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         formEditTexts.get(6).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         formEditTexts.get(7).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        formEditTexts.get(9).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         formEditTexts.get(10).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        formEditTexts.get(11).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         formEditTexts.get(12).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        formEditTexts.get(15).setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         formEditTexts.get(5).setFilters(new InputFilter[] {new InputFilter.LengthFilter(10), new InputFilter.AllCaps()});
         formEditTexts.get(13).setFilters(new InputFilter[] {new InputFilter.LengthFilter(11), new InputFilter.AllCaps()});
+
+        formEditTexts.get(0).setSelection(formEditTexts.get(0).getText().toString().length());
+        formEditTexts.get(1).setSelection(formEditTexts.get(1).getText().toString().length());
+        formEditTexts.get(2).setSelection(formEditTexts.get(2).getText().toString().length());
+        formEditTexts.get(3).setSelection(formEditTexts.get(3).getText().toString().length());
+        formEditTexts.get(4).setSelection(formEditTexts.get(4).getText().toString().length());
+        formEditTexts.get(5).setSelection(formEditTexts.get(5).getText().toString().length());
+        formEditTexts.get(6).setSelection(formEditTexts.get(6).getText().toString().length());
+        formEditTexts.get(7).setSelection(formEditTexts.get(7).getText().toString().length());
+        formEditTexts.get(8).setSelection(formEditTexts.get(8).getText().toString().length());
+        formEditTexts.get(9).setSelection(formEditTexts.get(9).getText().toString().length());
+        formEditTexts.get(10).setSelection(formEditTexts.get(10).getText().toString().length());
+        formEditTexts.get(11).setSelection(formEditTexts.get(11).getText().toString().length());
+        formEditTexts.get(12).setSelection(formEditTexts.get(12).getText().toString().length());
+        formEditTexts.get(13).setSelection(formEditTexts.get(13).getText().toString().length());
+        formEditTexts.get(14).setSelection(formEditTexts.get(14).getText().toString().length());
+        formEditTexts.get(15).setSelection(formEditTexts.get(15).getText().toString().length());
 
 
         choosePhotoHelper = ChoosePhotoHelper.with(this)
@@ -113,13 +150,67 @@ public class Registration extends AppCompatActivity {
                     }
                 });
 
+
+        rootFilters = Arrays.asList(this.getResources().getStringArray(R.array.filter_category));
+        for (int i = 0; i < rootFilters.size(); i++) {
+            AssignResponse model = new AssignResponse();
+            model.setName(rootFilters.get(i));
+            assignResponseList.add(model);
+        }
+
     }
 
-    @OnClick({R.id.profile_add, R.id.back,R.id.signIn})
+    @OnClick({R.id.profile_add, R.id.back, R.id.signIn, R.id.companyTxt})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
                 moveTaskToBack(false);
+                break;
+
+            case R.id.companyTxt:
+
+                final Dialog dialog = new Dialog(Registration.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+                dialog.setContentView(R.layout.dialog_list);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.setCancelable(true);
+
+                RecyclerView recyclerView = dialog.findViewById(R.id.recyclerView);
+                TextView close = dialog.findViewById(R.id.close);
+
+                //close.setText("Select Supplier Type");
+
+                close.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                recyclerView.addOnItemTouchListener(new RecyclerTouchListener(Registration.this, recyclerView, new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        AssignResponse countryResponse = assignResponseList.get(position);
+                        companyTxt.setText(assignResponseList.get(position).getName());
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+
+                }));
+
+                AssignToAdapter assignToAdapter = new AssignToAdapter(Registration.this, assignResponseList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(Registration.this));
+                recyclerView.setAdapter(assignToAdapter);
+                recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+                assignToAdapter.notifyDataSetChanged();
+                recyclerView.setHasFixedSize(true);
+
+                dialog.show();
+
                 break;
 
             case R.id.profile_add:
@@ -128,38 +219,76 @@ public class Registration extends AppCompatActivity {
 
             case R.id.signIn:
 
-                if (formEditTexts.get(0).testValidity() && formEditTexts.get(1).testValidity() && formEditTexts.get(2).testValidity() && formEditTexts.get(3).testValidity() && formEditTexts.get(4).testValidity()
-                && formEditTexts.get(5).testValidity() && formEditTexts.get(8).testValidity() && formEditTexts.get(9).testValidity()
-                && formEditTexts.get(11).testValidity() && formEditTexts.get(12).testValidity() && formEditTexts.get(13).testValidity()) {
+                if (!companyTxt.getText().toString().trim().equals("")) {
 
-                    matcher = pattern.matcher(formEditTexts.get(5).getText().toString());
-                    if (matcher.matches()) {
+                    if (formEditTexts.get(0).testValidity() && formEditTexts.get(1).testValidity() && formEditTexts.get(2).testValidity() && formEditTexts.get(3).testValidity() && formEditTexts.get(4).testValidity()
+                            && formEditTexts.get(5).testValidity() && formEditTexts.get(8).testValidity() && formEditTexts.get(9).testValidity() && formEditTexts.get(14).testValidity()
+                            && formEditTexts.get(11).testValidity() && formEditTexts.get(12).testValidity() && formEditTexts.get(13).testValidity()) {
 
-                        String imageString = "";
+                        if (formEditTexts.get(2).getText().toString().trim().length() == 10) {
 
-                        if (imageView.getDrawable() != null) {
-                            bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                            imageString = getStringImage(bitmap);
+                            if (formEditTexts.get(4).getText().toString().trim().length() == 12) {
 
-                            registration(imageString, formEditTexts.get(0).getText().toString(), formEditTexts.get(1).getText().toString(), formEditTexts.get(2).getText().toString(), formEditTexts.get(3).getText().toString(),
-                                    formEditTexts.get(4).getText().toString(), formEditTexts.get(5).getText().toString(), formEditTexts.get(6).getText().toString(), formEditTexts.get(7).getText().toString(),
-                                    formEditTexts.get(8).getText().toString(), formEditTexts.get(9).getText().toString(), formEditTexts.get(10).getText().toString(), formEditTexts.get(11).getText().toString(),
-                                    formEditTexts.get(12).getText().toString(), formEditTexts.get(13).getText().toString());
+                                if (formEditTexts.get(5).getText().toString().trim().length() == 10) {
+
+                                    matcher = pattern.matcher(formEditTexts.get(5).getText().toString());
+                                    if (matcher.matches()) {
+
+                                        if (formEditTexts.get(13).getText().toString().trim().length() == 11) {
+
+                                            if (formEditTexts.get(14).getText().toString().equals(formEditTexts.get(9).getText().toString())) {
+
+                                                String imageString = "";
+
+                                                if (imageView.getDrawable() != null) {
+                                                    bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                                                    imageString = getStringImage(bitmap);
+
+                                                    registration(imageString, companyTxt.getText().toString(), formEditTexts.get(15).getText().toString(), formEditTexts.get(0).getText().toString(), formEditTexts.get(1).getText().toString(), formEditTexts.get(2).getText().toString(), formEditTexts.get(3).getText().toString(),
+                                                            formEditTexts.get(4).getText().toString(), formEditTexts.get(5).getText().toString(), formEditTexts.get(6).getText().toString(), formEditTexts.get(7).getText().toString(),
+                                                            formEditTexts.get(8).getText().toString(), formEditTexts.get(9).getText().toString(), formEditTexts.get(10).getText().toString(), formEditTexts.get(11).getText().toString(),
+                                                            formEditTexts.get(12).getText().toString(), formEditTexts.get(13).getText().toString());
+                                                } else {
+                                                    Toasty.error(Registration.this, "Select profile image", Toasty.LENGTH_SHORT, true).show();
+                                                }
+                                            } else {
+                                                formEditTexts.get(14).setError("Enter valid confirm password");
+                                                formEditTexts.get(14).requestFocus();
+                                            }
+                                        } else {
+                                            formEditTexts.get(13).setError("Enter valid IFSC code");
+                                            formEditTexts.get(13).requestFocus();
+                                        }
+
+                                    } else {
+                                        formEditTexts.get(5).setError("Enter valid pan number");
+                                        formEditTexts.get(5).requestFocus();
+                                    }
+
+                                } else {
+                                    formEditTexts.get(5).setError("Enter valid pan number");
+                                    formEditTexts.get(5).requestFocus();
+                                }
+
+                            } else {
+                                formEditTexts.get(4).setError("Enter valid aadhar number");
+                                formEditTexts.get(4).requestFocus();
+                            }
+
                         } else {
-                            Toasty.error(Registration.this, "Select profile image", Toasty.LENGTH_SHORT, true).show();
+                            formEditTexts.get(2).setError("Enter valid mobile number");
+                            formEditTexts.get(2).requestFocus();
                         }
-
-                    } else {
-                        formEditTexts.get(5).setError("Enter valid pan number");
-                        formEditTexts.get(5).requestFocus();
                     }
+                }else {
+                    Toast.makeText(Registration.this, "Select company type", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
         }
     }
 
-    private void registration(String profilePhoto, String firstName, String lastName, String mobileNumber, String address, String aadharCard, String panCard, String planterArea, String dryArea, String emailId, String password, String bankName, String accountNumber, String branchNme, String iFSC) {
+    private void registration(String profilePhoto, String companyType, String companyName, String firstName, String lastName, String mobileNumber, String address, String aadharCard, String panCard, String planterArea, String dryArea, String emailId, String password, String bankName, String accountNumber, String branchNme, String iFSC) {
 
         ProgressDialog progressDialog = new ProgressDialog(Registration.this);
         progressDialog.setMessage("Loading...");
@@ -169,7 +298,7 @@ public class Registration extends AppCompatActivity {
         progressDialog.setCancelable(false);
 
         ApiInterface apiInterface = Api.getClient().create(ApiInterface.class);
-        Call<LoginResponse> call = apiInterface.Registration(profilePhoto, firstName, lastName, mobileNumber, address, aadharCard, panCard, planterArea, dryArea, emailId, password, bankName, accountNumber, branchNme, iFSC);
+        Call<LoginResponse> call = apiInterface.Registration(profilePhoto, companyType, companyName, firstName, lastName, mobileNumber, address, aadharCard, panCard, planterArea, dryArea, emailId, password, bankName, accountNumber, branchNme, iFSC);
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {

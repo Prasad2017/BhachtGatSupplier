@@ -70,11 +70,64 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/companyTxt"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="20dp"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:hint="Select Supplier Type"
+                android:layout_gravity="center"
+                android:gravity="center|left"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
+                android:fontFamily="@font/montserratregular"
+                android:background="@drawable/quantityback" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
+                whatever:boxCornerRadiusBottomEnd="5dp"
+                whatever:boxCornerRadiusBottomStart="5dp"
+                whatever:boxCornerRadiusTopEnd="5dp"
+                whatever:boxCornerRadiusTopStart="5dp"
+                android:gravity="center"
+                whatever:boxStrokeColor="@color/light_black"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:textColorHint="@color/light_black">
+
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/companyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/light_black"
+                    android:fontFamily="@font/montserratregular"
+                    android:hint="Company Name/कंपनी नाव  "
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/light_black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText"
+                    whatever:emptyErrorString="Please Fill This"
+                    whatever:testType="personName"
+                    whatever:testErrorString="Enter Valid First Name" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 whatever:boxCornerRadiusBottomEnd="5dp"
                 whatever:boxCornerRadiusBottomStart="5dp"
                 whatever:boxCornerRadiusTopEnd="5dp"
@@ -446,15 +499,47 @@
                     android:layout_height="wrap_content"
                     android:drawableTint="@color/light_black"
                     android:fontFamily="@font/montserratregular"
-                    android:hint="Password /संकेतशब्द* "
+                    android:hint="Password /पासवर्ड* "
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:padding="10dp"
-                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/light_black"
                     android:textSize="15sp"
-                    tools:ignore="HardcodedText"
+                    whatever:emptyErrorString="Please Fill This"
+                    whatever:testErrorString="Enter Valid Password" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                whatever:boxCornerRadiusBottomEnd="5dp"
+                whatever:boxCornerRadiusBottomStart="5dp"
+                whatever:boxCornerRadiusTopEnd="5dp"
+                whatever:boxCornerRadiusTopStart="5dp"
+                app:passwordToggleEnabled="true"
+                android:gravity="center"
+                whatever:boxStrokeColor="@color/light_black"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:textColorHint="@color/light_black">
+
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/confirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="@color/light_black"
+                    android:fontFamily="@font/montserratregular"
+                    android:hint="Confirm Password /
+पासवर्डची पुष्टी करा* "
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/light_black"
+                    android:textSize="15sp"
                     whatever:emptyErrorString="Please Fill This"
                     whatever:testErrorString="Enter Valid Password" />
 
@@ -493,8 +578,8 @@
                     android:fontFamily="@font/montserratregular"
                     android:hint="Account Number/खाते क्रमांक * "
                     android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:maxLength="18"
+                    android:inputType="numberDecimal"
+                    android:digits="0123456789"
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
@@ -529,15 +614,16 @@
                     android:hint="Bank Name/
 बँकेचे नाव * "
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textColorHint="@color/light_black"
                     android:textSize="15sp"
                     tools:ignore="HardcodedText"
+                    whatever:testType="personName"
                     whatever:emptyErrorString="Please Fill This"
-                    whatever:testErrorString="Enter Valid Bank Nmae" />
+                    whatever:testErrorString="Enter Valid Bank Name" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -564,7 +650,7 @@
                     android:hint="Branch Name/
 शाखेचे नाव * "
                     android:imeOptions="actionNext"
-                    android:inputType="text"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="@color/black"
@@ -597,7 +683,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTint="@color/light_black"
                     android:fontFamily="@font/montserratregular"
-                    android:hint="iFSC Code /ifsc कोड* "
+                    android:hint="IFSC Code /IFSC कोड* "
                     android:imeOptions="actionDone"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
                     android:textAllCaps="true"
@@ -609,7 +695,7 @@
                     android:textSize="15sp"
                     tools:ignore="HardcodedText"
                     whatever:emptyErrorString="Please Fill This"
-                    whatever:testErrorString="Enter Valid iFSC" />
+                    whatever:testErrorString="Enter Valid IFSC" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
