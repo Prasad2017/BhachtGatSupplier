@@ -119,7 +119,7 @@
                     tools:ignore="HardcodedText"
                     whatever:emptyErrorString="Please Fill This"
                     whatever:testType="personName"
-                    whatever:testErrorString="Enter Valid First Name" />
+                    whatever:testErrorString="Enter Valid Company Name" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -532,8 +532,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTint="@color/light_black"
                     android:fontFamily="@font/montserratregular"
-                    android:hint="Confirm Password /
-पासवर्डची पुष्टी करा* "
+                    android:hint="Confirm Password / पासवर्डची पुष्टी करा* "
                     android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:padding="10dp"
