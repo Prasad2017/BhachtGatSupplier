@@ -1,5 +1,6 @@
 package com.graminvikreta_supplier.Retrofit;
 
+import com.graminvikreta_supplier.Model.AllList;
 import com.graminvikreta_supplier.Model.LoginResponse;
 
 import org.json.JSONObject;
@@ -44,4 +45,21 @@ public interface ApiInterface {
                              @Query("message") String message);
 
 
+
+    @FormUrlEncoded
+    @POST("/androidApp/Supplier/addProduct.php")
+    Call<LoginResponse> addProduct(@Field("userId") String userId,
+                                   @Field("categoryId") String categoryId,
+                                   @Field("subCategoryId") String subCategoryId,
+                                   @Field("productId") String productId,
+                                   @Field("productDescription") String productDescription,
+                                   @Field("productStock") String productStock,
+                                   @Field("productUnit")  String productUnit,
+                                   @Field("productPrice") String productPrice,
+                                   @Field("productImage") String productImage,
+                                   @Field("secondImage") String secondImage);
+
+
+    @GET("/androidApp/Supplier/getProductList.php")
+    Call<AllList> getProductList(@Query("userId") String userId);
 }

@@ -1,8 +1,10 @@
 package com.graminvikreta_supplier.Fragment;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
@@ -29,14 +31,18 @@ import com.aminography.choosephotohelper.callback.ChoosePhotoCallback;
 import com.andreabaccega.widget.FormEditText;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.graminvikreta_supplier.Activity.Login;
 import com.graminvikreta_supplier.Activity.MainPage;
 import com.graminvikreta_supplier.Adapter.CategoryTxtAdapter;
 import com.graminvikreta_supplier.Adapter.SubCategoryTxtAdapter;
 import com.graminvikreta_supplier.Extra.DetectConnection;
 import com.graminvikreta_supplier.Model.CategoryResponse;
+import com.graminvikreta_supplier.Model.LoginResponse;
 import com.graminvikreta_supplier.Model.ProductResponse;
 import com.graminvikreta_supplier.Adapter.ProductTxtAdapter;
 import com.graminvikreta_supplier.R;
+import com.graminvikreta_supplier.Retrofit.Api;
+import com.graminvikreta_supplier.Retrofit.ApiInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -46,6 +52,9 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AddProduct extends Fragment {
@@ -452,9 +461,89 @@ public class AddProduct extends Fragment {
 
             case R.id.submit:
 
+                if (!categoryTxt.getText().toString().isEmpty()) {
+
+                    if (!subCategoryTxt.getText().toString().isEmpty()) {
+
+                        if (!productTxt.getText().toString().isEmpty()) {
+
+                            if (formEditTexts.get(0).testValidity() && formEditTexts.get(1).testValidity()
+                                    && formEditTexts.get(2).testValidity() && formEditTexts.get(3).testValidity()){
+
+                                if (imageViews.get(0).getDrawable() != null) {
+
+                                    bitmap = ((BitmapDrawable) imageViews.get(0).getDrawable()).getBitmap();
+                                    String productImage = getStringImage(bitmap);
+                                    String secondImage="";
+
+                                    if (imageViews.get(1).getDrawable()==null){
+                                        secondImage = "";
+                                    } else {
+                                        bitmap1 = ((BitmapDrawable) imageViews.get(1).getDrawable()).getBitmap();
+                                        secondImage = getStringImage(bitmap1);
+                                    }
+
+                                    addProduct(categoryId, subCategoryId, productId, formEditTexts.get(0).getText().toString(), formEditTexts.get(1).getText().toString(),
+                                            formEditTexts.get(2).getText().toString(), formEditTexts.get(3).getText().toString(), productImage, secondImage);
+
+                                } else {
+                                    Toasty.error(getActivity(), "Select Product Primary Image", Toasty.LENGTH_SHORT, true).show();
+                                }
+                            }
+
+                        } else {
+                            productTxt.setError("Select Product");
+                            productTxt.requestFocus();
+                        }
+
+                    } else {
+                        subCategoryTxt.setError("Select Sub Category");
+                        subCategoryTxt.requestFocus();
+                    }
+
+                } else {
+                    categoryTxt.setError("Select Category");
+                    subCategoryTxt.requestFocus();
+                }
+
                 break;
 
         }
+    }
+
+    private void addProduct(String categoryId, String subCategoryId, String productId, String productDescription, String productStock, String productUnit, String productPrice, String productImage, String secondImage) {
+
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setTitle("Product Adding..");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+        progressDialog.setCancelable(false);
+
+        ApiInterface apiInterface = Api.getClient().create(ApiInterface.class);
+        Call<LoginResponse> call = apiInterface.addProduct(MainPage.userId, categoryId, subCategoryId, productId, productDescription, productStock, productUnit, productPrice, productImage, secondImage);
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+
+                if (response.body().getStatus().equalsIgnoreCase("true")){
+                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(), ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                } else if (response.body().getStatus().equalsIgnoreCase("false")){
+                    progressDialog.dismiss();
+                    Toast.makeText(getActivity(), ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                progressDialog.dismiss();
+                Log.e("productError", ""+t.getMessage());
+            }
+        });
+
+
     }
 
     private String getStringImage(Bitmap bmp){
