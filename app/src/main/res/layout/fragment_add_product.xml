@@ -36,50 +36,56 @@
                 android:fontFamily="@font/montserratbold"
                 android:text="Add New Product"/>
 
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            <TextView
                 android:id="@+id/categorySpin"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="30dp"
-                app:hintText="Select Category"
+                android:hint="Select Category"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="15sp"
                 android:layout_gravity="center"
                 android:gravity="center|left"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
-                android:fontFamily="@font/montserratmedium"
-                android:background="@drawable/spinnerbackground" />
+                android:fontFamily="@font/montserratregular"
+                android:background="@drawable/edittextborder" />
 
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            <TextView
                 android:id="@+id/subCategorySpin"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
-                app:hintText="Select Sub Category"
+                android:hint="Select Sub Category"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="15sp"
                 android:layout_gravity="center"
                 android:gravity="center|left"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
-                android:fontFamily="@font/montserratmedium"
-                android:background="@drawable/spinnerbackground" />
+                android:fontFamily="@font/montserratregular"
+                android:background="@drawable/edittextborder" />
 
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            <TextView
                 android:id="@+id/productSpin"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="10dp"
-                app:hintText="Select Product"
+                android:hint="Select Product"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="15sp"
                 android:layout_gravity="center"
                 android:gravity="center|left"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:drawableRight="@drawable/ic_baseline_arrow_forward_ios_24"
-                android:fontFamily="@font/montserratmedium"
-                android:background="@drawable/spinnerbackground" />
+                android:fontFamily="@font/montserratregular"
+                android:background="@drawable/edittextborder" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -101,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/light_black"
-                    android:fontFamily="@font/montserratmedium"
+                    android:fontFamily="@font/montserratregular"
                     android:hint="Product Description"
                     android:imeOptions="actionNext"
                     android:inputType="textMultiLine"
@@ -135,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/light_black"
-                    android:fontFamily="@font/montserratmedium"
+                    android:fontFamily="@font/montserratregular"
                     android:hint="Product Stock"
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
@@ -171,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/light_black"
-                    android:fontFamily="@font/montserratmedium"
+                    android:fontFamily="@font/montserratregular"
                     android:hint="Product Unit"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -206,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/light_black"
-                    android:fontFamily="@font/montserratmedium"
+                    android:fontFamily="@font/montserratregular"
                     android:hint="Product Price"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
